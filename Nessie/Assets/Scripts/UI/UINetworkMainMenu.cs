@@ -19,6 +19,7 @@ public class UINetworkMainMenu : MonoBehaviour
         networkManager = GameManager.Instance.NetworkManager;   
          networkManager.PlayerJoinedOrCreatedRoom += HideInitialConnectToServerUI; 
         networkManager.PlayerJoinedOrCreatedRoom += ToggleWaitingForOpponentMessage; 
+        networkManager.ServerFull += HideMenu;
 
         ToggleWaitingForOpponentMessage(0);
     }
@@ -45,6 +46,11 @@ public class UINetworkMainMenu : MonoBehaviour
             waitingForOpponentText.SetActive(false);
         if(numberOfPlayers == 1)
             waitingForOpponentText.SetActive(true);
+    }
+
+    private void HideMenu()
+    {
+        this.gameObject.SetActive(false);
     }
 
    

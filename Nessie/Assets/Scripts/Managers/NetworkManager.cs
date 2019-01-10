@@ -7,6 +7,7 @@ using System;
 public class NetworkManager : Photon.MonoBehaviour
 {
     public event Action<int> PlayerJoinedOrCreatedRoom;
+    public event Action ServerFull;
 
     private void Start()
     {
@@ -35,6 +36,8 @@ public class NetworkManager : Photon.MonoBehaviour
             Debug.Log("Server Filled");
             Debug.Log("Player One: " + PhotonNetwork.playerList[0].NickName);
             Debug.Log("Player Two: " + PhotonNetwork.playerList[1].NickName);
+
+            ServerFull();
         }
 
         PlayerJoinedOrCreatedRoom(numberOfPlayersInRoom);
@@ -48,6 +51,8 @@ public class NetworkManager : Photon.MonoBehaviour
             Debug.Log("Server Filled");
             Debug.Log("Player One: " + PhotonNetwork.playerList[0].NickName);
             Debug.Log("Player Two: " + PhotonNetwork.playerList[1].NickName);
+
+            ServerFull();
         }        
 
         PlayerJoinedOrCreatedRoom(PhotonNetwork.playerList.Length);

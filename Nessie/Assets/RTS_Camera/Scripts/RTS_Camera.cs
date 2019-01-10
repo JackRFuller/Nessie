@@ -7,6 +7,7 @@ namespace RTS_Cam
     [AddComponentMenu("RTS Camera")]
     public class RTS_Camera : MonoBehaviour
     {
+        private PlayerView playerView;
 
         #region Foldouts
 
@@ -105,22 +106,12 @@ namespace RTS_Cam
         public KeyCode rotateLeftKey = KeyCode.Z;
 
         public bool useMouseRotation = true;
-        public KeyCode mouseRotationKey = KeyCode.Mouse1;
-
-        private Vector2 KeyboardInput
-        {
-            get { return useKeyboardInput ? new Vector2(Input.GetAxis(horizontalAxis), Input.GetAxis(verticalAxis)) : Vector2.zero; }
-        }
+        public KeyCode mouseRotationKey = KeyCode.Mouse1;       
 
         private Vector2 MouseInput
         {
             get { return Input.mousePosition; }
-        }
-
-        private float ScrollWheel
-        {
-            get { return Input.GetAxis(zoomingAxis); }
-        }
+        }       
 
         private Vector2 MouseAxis
         {
@@ -167,6 +158,7 @@ namespace RTS_Cam
 
         private void Start()
         {
+            playerView = GetComponent<PlayerView>();
             m_Transform = transform;
         }
 
@@ -208,7 +200,7 @@ namespace RTS_Cam
         {
             if (useKeyboardInput)
             {
-                Vector3 desiredMove = new Vector3(KeyboardInput.x, 0, KeyboardInput.y);
+                Vector3 desiredMove = new Vector3(playerView.GetPlayerInput.KeyboardInput.x, 0, playerView.GetPlayerInput.KeyboardInput.y);
 
                 desiredMove *= keyboardMovementSpeed;
                 desiredMove *= Time.deltaTime;
@@ -258,7 +250,7 @@ namespace RTS_Cam
         {
             float distanceToGround = DistanceToGround();
             if(useScrollwheelZooming)
-                zoomPos += ScrollWheel * Time.deltaTime * scrollWheelZoomingSensitivity;
+                zoomPos += playerView.GetPlayerInput.ZoomAxis * Time.deltaTime * scrollWheelZoomingSensitivity;
             if (useKeyboardZooming)
                 zoomPos += ZoomDirection * Time.deltaTime * keyboardZoomingSensitivity;
 
