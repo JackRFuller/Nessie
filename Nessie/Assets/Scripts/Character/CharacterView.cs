@@ -4,15 +4,12 @@ using UnityEngine;
 
 public class CharacterView : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    private PlayerView playerView;
 
-    // Update is called once per frame
-    void Update()
+    public PlayerView GetPlayerView { get {return playerView;}}
+
+    public void SetupCharacter(PlayerView _playerView)
     {
-        
+        playerView = _playerView;
     }
 }
