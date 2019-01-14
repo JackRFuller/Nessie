@@ -10,5 +10,11 @@ public class CharacterComponent : MonoBehaviour
     protected virtual void Start() 
     {
         characterView = GetComponent<CharacterView>();
+        characterView.CharacterViewSetup += SetupComponent;
+    }
+
+    protected virtual void SetupComponent()
+    {
+
     }
 }

@@ -1,11 +1,9 @@
 fileFormatVersion: 2
-guid: 1f8d9272c4cb8b749bd6382600eaf301
+guid: 56cdb6ca9fe99124b8abed46cc2176a0
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences:
-  - movementTargetIndicatorPrefab: {fileID: 6407276867928997931, guid: dd6f14641bab5244a9ee108f94235de6,
-      type: 3}
+  defaultReferences: []
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

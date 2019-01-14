@@ -11,9 +11,6 @@ public class PlayerCharacterController : PlayerComponent
     protected override void Start()
     {
         base.Start();
-
-        character = PhotonNetwork.Instantiate("Character", Vector3.zero, Quaternion.identity, 0);
-        characterView = character.GetComponent<CharacterView>();
-        characterView.SetupCharacter(playerView);
     }    
 }
+

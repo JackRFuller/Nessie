@@ -37,4 +37,8 @@ MonoBehaviour:
   - PunRespawn
   - RequestForPickupItems
   - RequestForPickupTimes
+  - DetermineWhoIsAttackerAndWhoIsRunner
+  - PlayerLockedTurn
+  - CharacterAtDestination
+  - AttackerFailedToFindRunner
   DisableAutoOpenWizard: 1

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerInput : MonoBehaviour
+public class PlayerInput : PlayerComponent
 {
     private Vector2 keyboardInput;
     private float zoomAxis;
@@ -13,8 +13,11 @@ public class PlayerInput : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        GetKeyBoardInput();
-        GetMouseScrollInput();
+        if(playerView.GetPhotonView.ownerId == PhotonNetwork.player.ID)
+        {
+            GetKeyBoardInput();
+            GetMouseScrollInput();
+        }
     }
 
     void GetKeyBoardInput()

@@ -14,14 +14,18 @@ public class UIMatchMessage : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        matchMessageAnimator = GetComponent<Animator>();
-        matchMessageHolderObj.SetActive(false);        
+        matchMessageAnimator = GetComponent<Animator>(); 
+        matchMessageHolderObj.SetActive(false);                       
     }
 
     public  void ShowMatchMessage(string matchMessage)
     {
         matchMessageHolderObj.SetActive(true);        
         matchMessageText.text = matchMessage;
+
+        if(matchMessageAnimator == null)
+             matchMessageAnimator = GetComponent<Animator>();
+
         matchMessageAnimator.SetTrigger("ShowMessage");
         StartCoroutine(ShowMessageCooldown());
     }

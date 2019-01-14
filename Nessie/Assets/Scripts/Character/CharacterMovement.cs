@@ -11,10 +11,10 @@ public class CharacterMovement : CharacterComponent
     private NavMeshPath navMeshPath;    
 
     [Header("Movement Attributes")]
-    [SerializeField] private float maxPathLength = 10;
+    [SerializeField] private float maxPathLength = 100;
+    private Vector3 pathDestination;
+    private bool pathLocked = false;
 
-    [Header("HUD Elements")]
-    [SerializeField] private GameObject movementTargetIndicatorPrefab;
     private MovementTargetIndicator movementTargetIndicator;
 
     private MovementState movementState = MovementState.Standing;
@@ -23,6 +23,8 @@ public class CharacterMovement : CharacterComponent
         Standing,
         Moving,
     }
+
+    
 
     // Start is called before the first frame update
     protected override void Start()
@@ -34,20 +36,61 @@ public class CharacterMovement : CharacterComponent
         navMeshPath = new NavMeshPath();
 
         //Load in HUD Elements
-        GameObject movementIndicator = Instantiate(movementTargetIndicatorPrefab,Vector3.zero,Quaternion.identity);
+        GameObject movementIndicator = Instantiate(Resources.Load("MovementTarget"),Vector3.zero,Quaternion.identity) as GameObject;
         movementTargetIndicator = movementIndicator.GetComponent<MovementTargetIndicator>();
-    }   
+        movementState = MovementState.Standing;
+
+        GameManager.Instance.TurnManager.NewTurnStarted += ResetOnNewTurn;
+        GameManager.Instance.TurnManager.PlayOutTurn += MoveCharacter;
+    }
 
     private void Update()
     {
         SendOutRayCastFromMousePosition();
+
+        CheckPlayerIsAtDestination();
     } 
 
-    private void SendOutRayCastFromMousePosition()
-    {
-        if(movementState != MovementState.Standing)
-            return;
+    #region Character Movement
 
+    private void MoveCharacter()
+    {
+        navMeshAgent.destination = pathDestination;
+        movementState = MovementState.Moving;
+    }
+
+    private void CheckPlayerIsAtDestination()
+    {
+        if(movementState == MovementState.Moving)
+        {
+            if(!navMeshAgent.pathPending)
+            {
+                if(navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
+                {
+                    if(!navMeshAgent.hasPath || navMeshAgent.velocity.sqrMagnitude == 0f)
+                    {
+                         GameManager.Instance.PhotonView.RPC("CharacterAtDestination",PhotonTargets.All);
+                         movementState = MovementState.Standing;
+                    }
+                }
+            }
+        }
+    }
+
+    #endregion
+
+    private void ResetOnNewTurn()
+    {
+        pathLocked = false;
+    }
+
+    #region PathFinding Logic
+
+    private void SendOutRayCastFromMousePosition()
+    {        
+        if(pathLocked)
+            return;
+       
         RaycastHit hit;
         Ray ray = playerCamera.ScreenPointToRay(Input.mousePosition);
 
@@ -61,15 +104,15 @@ public class CharacterMovement : CharacterComponent
                 {
                     if(Input.GetMouseButton(0))
                     {
-                        navMeshAgent.destination = hit.point;
-                        movementState = MovementState.Moving;
+                        pathDestination = hit.point;
+                        pathLocked = true;
                     }
                 }                
-                movementTargetIndicator.UpdateMoveTargetIndicator(true,validPath,hit.point);
+                movementTargetIndicator.UpdateMoveTargetIndicator(true,validPath,hit.point);                
             }
             else
             {
-                movementTargetIndicator.UpdateMoveTargetIndicator(false,false,hit.point);
+                movementTargetIndicator.UpdateMoveTargetIndicator(false,false,hit.point);                
             }
         }
     }
@@ -77,7 +120,7 @@ public class CharacterMovement : CharacterComponent
     private bool CheckIfPathIsValid(Vector3 targetPosition)
     {
         NavMesh.CalculatePath(transform.position,targetPosition,NavMesh.AllAreas,navMeshPath);
-        //movementTargetIndicator.DrawPath(navMeshPath);
+       
          //Debug
         for(int i = 0; i < navMeshPath.corners.Length - 1; i++)        
             Debug.DrawLine(navMeshPath.corners[i], navMeshPath.corners[i+1],Color.red);
@@ -113,4 +156,6 @@ public class CharacterMovement : CharacterComponent
 
         return length;
     }
+
+    #endregion
 }
