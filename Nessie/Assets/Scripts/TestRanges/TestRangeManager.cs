@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class TestRangeManager : MonoBehaviour
 {
+    public bool SpawnInThief;
+    public bool SpawnInGuard;
+
     private void Start()
     {
         PhotonNetwork.ConnectUsingSettings("Pre-Alpha");
@@ -25,6 +28,11 @@ public class TestRangeManager : MonoBehaviour
     public virtual void OnJoinedRoom()
     {
        Debug.Log("OnJoinedRoom");
-       PhotonNetwork.Instantiate("Player", new Vector3(0, 12, -13), Quaternion.Euler(new Vector3(45,0,0)), 0);
+
+       if(SpawnInGuard)
+        PhotonNetwork.Instantiate("Guard", new Vector3(2, 1, 0), Quaternion.identity,0);
+
+        if(SpawnInThief)
+        PhotonNetwork.Instantiate("Thief", new Vector3(-2, 1, 0), Quaternion.identity,0);
     }
 }

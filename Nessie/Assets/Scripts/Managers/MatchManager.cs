@@ -33,35 +33,31 @@ public class MatchManager : MonoBehaviour
         if(playerType == 0)
         {
             if(PhotonNetwork.player.IsMasterClient) 
-                SetupAttacker();           
+                SetupGuard();           
             else
-                SetupRunner();                        
+                SetupThief();                        
         }
         else
         {
             if(PhotonNetwork.player.IsMasterClient) 
-                SetupRunner();           
+                SetupGuard();           
             else
-                SetupAttacker();  
+                SetupThief();  
         }
 
         MatchStarted();
     }
 
-    private void SetupAttacker()
-    {
-        GameObject player = PhotonNetwork.Instantiate("Player", new Vector3(0, 10, 14), Quaternion.Euler(new Vector3(45,180,0)), 0);
-        PlayerView playerView = player.GetComponent<PlayerView>();
-        GameObject character = PhotonNetwork.Instantiate("Attacker", attackerSpawnPoints[UnityEngine.Random.Range(0,attackerSpawnPoints.Length)].position, Quaternion.identity, 0);
-        character.GetComponent<CharacterView>().SetupCharacter(playerView);
+    private void SetupGuard()
+    {        
+        GameObject character = PhotonNetwork.Instantiate("Guard", attackerSpawnPoints[UnityEngine.Random.Range(0,attackerSpawnPoints.Length)].position, Quaternion.identity, 0);
+        //character.GetComponent<CharacterView>().SetupCharacter(playerView);
     }
 
-    private void SetupRunner()
-    {
-        GameObject player = PhotonNetwork.Instantiate("Player", new Vector3(0, 12, -13), Quaternion.Euler(new Vector3(45,0,0)), 0);
-        PlayerView playerView = player.GetComponent<PlayerView>();
-        GameObject character = PhotonNetwork.Instantiate("Runner", runnerSpawnPoints[UnityEngine.Random.Range(0,runnerSpawnPoints.Length)].position, Quaternion.identity, 0);
-        character.GetComponent<CharacterView>().SetupCharacter(playerView);
+    private void SetupThief()
+    {        
+        GameObject character = PhotonNetwork.Instantiate("Thief", runnerSpawnPoints[UnityEngine.Random.Range(0,runnerSpawnPoints.Length)].position, Quaternion.identity, 0);
+        //character.GetComponent<CharacterView>().SetupCharacter(playerView);
     }
 
 
